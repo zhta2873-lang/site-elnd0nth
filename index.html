@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إمبراطورية مهرجانات سامر المدني المدمجة 👑</title>
+    <!-- خطوط وأيقونات حماسية وشرسة -->
+    <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@700&family=Tajawal:wght@500;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --glow-color: #ff0055;
+            --bg-black: #050508;
+            --panel-bg: #11070b;
+            --neon-blue: #00f0ff;
+            --text-color: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-black);
+            color: var(--text-color);
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* واجهة الدخول الشرسة والمظلمة */
+        .intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #000000 30%, #1a000c 100%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.8s cubic-bezier(0.9, 0, 0.1, 1);
+        }
+
+        .intro-screen.hide {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .skull-logo {
+            font-size: 5rem;
+            color: var(--glow-color);
+            text-shadow: 0 0 20px var(--glow-color), 0 0 40px var(--glow-color);
+            animation: pulse 1.5s infinite alternate;
+            margin-bottom: 10px;
+        }
+
+        .intro-title {
+            font-family: 'Reem+Kufi', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #fff;
+            text-shadow: 0 0 10px #fff, 0 0 20px var(--glow-color);
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        .intro-subtitle {
+            color: #888;
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+            letter-spacing: 4px;
+        }
+
+        .enter-btn {
+            background: transparent;
+            color: #fff;
+            border: 3px solid var(--glow-color);
+            padding: 15px 45px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            cursor: pointer;
+            border-radius: 50px;
+            transition: all 0.4s;
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.4);
+        }
+
+        .enter-btn:hover {
+            background-color: var(--glow-color);
+            box-shadow: 0 0 35px var(--glow-color);
+            transform: scale(1.1);
+        }
+
+        /* الواجهة الرئيسية */
+        .main-app {
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            height: 100vh;
+            background: radial-gradient(circle at center, #15050e 0%, #050508 100%);
+        }
+
+        header {
+            background-color: var(--panel-bg);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--glow-color);
+            box-shadow: 0 5px 20px rgba(255, 0, 85, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            text-shadow: 0 0 10px var(--glow-color);
+        }
+
+        .offline-badge {
+            background-color: #10b981;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 0 10px #10b981;
+        }
+
+        .festivals-container {
+            padding: 25px;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .festival-card {
+            background: linear-gradient(145deg, #160a10, #0a0508);
+            border: 1px solid #2d121f;
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .festival-card:hover {
+            border-color: var(--glow-color);
+            box-shadow: 0 0 20px rgba(255, 0, 85, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .festival-card.active {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.4);
+        }
+
+        .festival-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .festival-info p {
+            font-size: 0.85rem;
+            color: #a09098;
+        }
+
+        /* مشغل الصوت */
+        .player-bar {
+            background-color: var(--panel-bg);
+            border-top: 2px solid var(--glow-color);
+            padding: 20px 30px;
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .now-playing h4 {
+            font-size: 1rem;
+            color: #fff;
+        }
+
+        .now-playing span {
+            font-size: 0.8rem;
+            color: var(--glow-color);
+            font-weight: bold;
+            display: none;
+        }
+
+        .player-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-btns {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .control-btns button {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .main-play-btn {
+            background-color: #fff !important;
+            color: #000 !important;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem !important;
+            box-shadow: 0 0 15px #fff;
+        }
+
+        .progress-area {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            gap: 10px;
+        }
+
+        .progress-bar-container {
+            flex: 1;
+            height: 6px;
+            background-color: #222;
+            border-radius: 10px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: var(--glow-color);
+            box-shadow: 0 0 10px var(--glow-color);
+            border-radius: 10px;
+        }
+
+        @keyframes pulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.05); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- واجهة الدخول الشرسة -->
+    <div class="intro-screen" id="introScreen">
+        <div class="skull-logo"><i class="fa-solid fa-radiation text-danger"></i></div>
+        <div class="intro-title">مهرجانات سامر المدني</div>
+        <div class="intro-subtitle">المشغل الشرس المدمج - بدون إنترنت</div>
+        <button class="enter-btn" onclick="enterApp()">دخول الإمبراطورية وتفجير الصوت المخزن 🔥</button>
+    </div>
+
+    <!-- التطبيق الأساسي -->
+    <div class="main-app">
+        <header>
+            <h1><i class="fa-solid fa-compact-disc fa-spin" style="color: var(--glow-color);"></i> الأرشيف الرسمي المدمج (OFFLINE)</h1>
+            <div class="offline-badge"><i class="fa-solid fa-database"></i> مسجل بالكامل داخلياً</div>
+        </header>
+
+        <!-- كروت المهرجانات وعناوينها -->
+        <div class="festivals-container" id="festivalsContainer"></div>
+
+        <!-- أزرار التحكم -->
+        <div class="player-bar">
+            <div class="now-playing">
+                <h4 id="trackTitle">اختر مهرجاناً من الأسفل</h4>
+                <span id="previewTag">🔥 جاري تشغيل أول 7 ثوانٍ تشويقية...</span>
+            </div>
+
+            <div class="player-controls">
+                <div class="control-btns">
+                    <button onclick="prevTrack()"><i class="fa-solid fa-backward-step"></i></button>
+                    <button class="main-play-btn" id="mainPlayBtn" onclick="togglePlay()"><i class="fa-solid fa-play"></i></button>
+                    <button onclick="nextTrack()"><i class="fa-solid fa-forward-step"></i></button>
+                </div>
+                <div class="progress-area">
+                    <span id="currentTime">0:00</span>
+                    <div class="progress-bar-container" onclick="seekTrack(event)">
+                        <div class="progress-bar" id="progressBar"></div>
+                    </div>
+                    <span id="totalDuration">0:00</span>
+                </div>
+            </div>
+            
+            <div style="text-align: left; color: var(--text-muted); font-size: 0.8rem;">📦 كود مدمج بالكامل</div>
+        </div>
+    </div>
+
+    <audio id="mainAudio"></audio>
+
+    <script>
+        // -------------------------------------------------------------------------------------
+        // هنا جميع عناوين مهرجانات سامر المدني، ومسجلة ومحفوظة داخل الكود عبر شفرة الـ Base64
+        // ضعي كود الـ Base64 الخاص بكل أغنية داخل خانة الـ "audioData" لكي تعمل بدون ملفات خارجية نهائياً
+        // -------------------------------------------------------------------------------------
+        const festivalsData = [
+            {
+                title: "مهرجان أنا عمكم (بعبع بمشي خط حاميكو)",
+                // ضعي كود الـ Base64 للأغنية كاملة بين العلامتين أدناه بدلاً من كلمة "ضع_كود_الأغنية_هنا"
+                audioData: "data:audio/mp3;base64,ضع_كود_الأغنية_الأولى_هنا"
+            },
+            {
+                title: "مهرجان كوكب الأقرود (أنا مش هعيش في دور الطيبة)",
+                audioData: "data:audio/mp3;base64,ضع_كود_الأغنية_الثانية_هنا"
+            },
+            {
+                title: "مهرجان هاتو سكاكينكو (شيطان وبشد السلاح)",
+                audioData: "data:audio/mp3;base64,ضع_كود_الأغنية_الثالثة_هنا"
+            },
+            {
+                title: "مهرجان أشرب حشيش لو يوم كلمتني",
+                audioData: "data:audio/mp3;base64,ضع_كود_الأغنية_الرابعة_هنا"
+            },
+            {
+                title: "مهرجان خلصانة معاكو بشياكة",
+                audioData: "data:audio/mp3;base64,ضع_كود_الأغنية_الخامسة_هنا"
+            }
+        ];
+
+        let currentTrackIndex = 0;
+        let isPlaying = false;
+        let isPreviewMode = false;
+        let previewTimeout;
+
+        const audio = document.getElementById('mainAudio');
+        const mainPlayBtn = document.getElementById('mainPlayBtn');
+        const trackTitle = document.getElementById('trackTitle');
+        const previewTag = document.getElementById('previewTag');
+        const progressBar = document.getElementById('progressBar');
+        const currentTimeLabel = document.getElementById('currentTime');
+        const totalDurationLabel = document.getElementById('totalDuration');
+
+        function enterApp() {
+            document.getElementById('introScreen').classList.add('hide');
+            buildCards();
+        }
+
+        function buildCards() {
+            const container = document.getElementById('festivalsContainer');
+            container.innerHTML = '';
+            festivalsData.forEach((fest, index) => {
+                const card = document.createElement('div');
+                card.classList.add('festival-card');
+                card.id = `card_${index}`;
+                card.onclick = () => playTrack(index);
+                card.innerHTML = `
+                    <div class="festival-info">
+                        <h3>${fest.title}</h3>
+                        <p><i class="fa-solid fa-microphone-lines"></i> سامر المدني - مدمج داخلياً</p>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function playTrack(index) {
+            clearTimeout(previewTimeout);
+            document.querySelectorAll('.festival-card').forEach(c => c.classList.remove('active'));
+            
+            currentTrackIndex = index;
+            const track = festivalsData[currentTrackIndex];
+            
+            document.getElementById(`card_${index}`).classList.add('active');
+            trackTitle.innerText = track.title;
+            
+            // تشغيل الصوت المدمج بالداخل مباشرة
+            audio.src = track.audioData;
+            audio.currentTime = 0;
+            audio.play();
+            isPlaying = true;
+            isPreviewMode = true;
+            previewTag.style.display = "block";
+            mainPlayBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+
+            // آلية الـ 7 ثوانٍ التشويقية
+            previewTimeout = setTimeout(() => {
+                audio.pause();
+                isPreviewMode = false;
+                previewTag.style.display = "none";
+                
+                // تنبيه الانتقال التلقائي للأغنية الكاملة المسجلة بالداخل
+                alert("🏴‍☠️ انتهت الـ 7 ثوانٍ التشويقية للمهرجان. اضغط موافق لتكملة المهرجان كاملاً من الذاكرة الداخلية وبدون نت!");
+                audio.play();
+                isPlaying = true;
+                mainPlayBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+            }, 7000);
+        }
+
+        function togglePlay() {
+            if (!audio.src) return;
+            if (isPlaying) {
+                audio.pause();
+                clearTimeout(previewTimeout);
+                previewTag.style.display = "none";
+                mainPlayBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
+            } else {
+                audio.play();
+                mainPlayBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+            }
+            isPlaying = !isPlaying;
+        }
+
+        function nextTrack() {
+            let next = currentTrackIndex + 1;
+            if (next >= festivalsData.length) next = 0;
+            playTrack(next);
+        }
+
+        function prevTrack() {
+            let prev = currentTrackIndex - 1;
+            if (prev < 0) prev = festivalsData.length - 1;
+            playTrack(prev);
+        }
+
+        audio.addEventListener('timeupdate', () => {
+            const current = audio.currentTime;
+            const duration = audio.duration || 0;
+            if (duration > 0) {
+                progressBar.style.width = (current / duration) * 100 + '%';
+            }
+            currentTimeLabel.innerText = formatTime(current);
+            if (duration) totalDurationLabel.innerText = formatTime(duration);
+        });
+
+        function seekTrack(event) {
+            if (!audio.duration) return;
+            const rect = event.currentTarget.getBoundingClientRect();
+            const seekTime = ((event.clientX - rect.left) / rect.width) * audio.duration;
+            clearTimeout(previewTimeout);
+            previewTag.style.display = "none";
+            isPreviewMode = false;
+            audio.currentTime = seekTime;
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+    </script>
+</body>
+</html>
